@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="./main.css" rel="stylesheet" type="text/css" media="all">
+		<title>data input sheet</title>
+	</head>
+	<body>
+		<div class="inputcontainer">
+			<form name="form">
+				<label for="name">Name</label>
+				<input type="text" id="name" name="name" value="testname" onfocus="clearStyle(this.id)" onblur='validateName(this.value, this.id)'><br>
+				<label for="email">Email</label>
+				<input type="text" id="email" name="email" value="testemail" onblur='validateInput("email")'><br>
+				<label for="cord">Card</label>
+				<input type="text" id="card" name="card" value="testcard" onblur='validateInput("card")'><br>
+				<input type="submit">
+				</form>
+				<script>
+					//const nameId = document.getElementById("name");
+					//nameId.addEventListener("focus", myFocusFunction, true);
+					//nameId.addEventListener("blur", myBlurFunction, true);
+
+					function clearStyle(id) {
+						document.getElementById(id).style.backgroundColor = "";  
+					}
+
+					function validateName(value, id) {
+						if (value == "") {
+							document.getElementById(id).style.backgroundColor = "var(--cpink)";
+						}
+						else {
+							document.getElementById(id).style.backgroundColor = ""
+						}
+					}
+				</script>
+		</div>
+	</body>
+</html>

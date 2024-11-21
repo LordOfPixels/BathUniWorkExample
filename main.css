@@ -1,0 +1,23 @@
+:root {
+  --cgreen: #89c82e;
+  --cgrey: #3c3c3b;
+  --cpink: #e70064;
+}
+
+body{
+	background-color:white;
+	font-family:calibri, sans-serif;
+	font-size:11pt;
+	font-color:var(--cgrey);
+}
+.inputcontainer{
+	background-color:var(--cgreen);
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--cgrey);
+	width:50%;
+	margin:auto;
+}
+.inputfield{
+	
+}
