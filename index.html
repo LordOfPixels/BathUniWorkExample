@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
@@ -6,32 +7,84 @@
 		<title>data input sheet</title>
 	</head>
 	<body>
-		<div class="inputcontainer">
-			<form name="form">
-				<label for="name">Name</label>
-				<input type="text" id="name" name="name" value="testname" onfocus="clearStyle(this.id)" onblur='validateName(this.value, this.id)'><br>
-				<label for="email">Email</label>
-				<input type="text" id="email" name="email" value="testemail" onblur='validateInput("email")'><br>
-				<label for="cord">Card</label>
-				<input type="text" id="card" name="card" value="testcard" onblur='validateInput("card")'><br>
-				<input type="submit">
-				</form>
+		<div class="inputContainer">
+			<form id="form" onsubmit='validateSubmit("form");return false;' name="form">
+				<div class = "textEntry">
+				<label for="name">Name: </label>
+				<input class="valid" type="text" id="name" name="name" valid="false" onfocus='this.className="valid"' onblur='validateText(this.value, this.id, namePattern)'><br>
+				</div>
+				<div class = "textEntry">
+				<label for="email">Email: </label>
+				<input class = "valid" type="text" id="email" name="email" valid="false" onfocus='this.className="valid"' onblur='validateText(this.value, this.id, emailPattern)'><br>
+				</div>
+				<div class = "textEntry">
+				<label for="card">Card: </label>
+				<input class="valid" type="text" id="card" name="card" maxlength="16" valid="false" onfocus='this.className="valid"' onblur='validateCard(this.value, this.id, emailPattern)'>
+				</div>
+				<div class="submit" ><input class="inputButton" type="submit"></div>
+			</form>
 				<script>
-					//const nameId = document.getElementById("name");
-					//nameId.addEventListener("focus", myFocusFunction, true);
-					//nameId.addEventListener("blur", myBlurFunction, true);
-
-					function clearStyle(id) {
-						document.getElementById(id).style.backgroundColor = "";  
-					}
-
-					function validateName(value, id) {
-						if (value == "") {
-							document.getElementById(id).style.backgroundColor = "var(--cpink)";
+					const namePattern = /^[A-Za-z0-9]+[A-Za-z0-9!#$%&'*+\-\/=?^_`{|}~]+ [A-Za-z-0-9]+[A-Za-z0-9!#$%&'*+\-\/=?^_`{|}~]+$/;
+					const emailPattern = /^[\w-!#$%&'*+\/=?^_`{|}~]+[\w-!#$%&'*+\/=?^_`{|}~\.]*@([\w-]+\.)+[\w-]{2,4}$/;
+					function validateText(value, id, pattern) {
+						if (!pattern.test(value)) {
+							document.getElementById(id).className = "invalid";
+							document.getElementById(id).setAttribute("valid", "false");
 						}
 						else {
-							document.getElementById(id).style.backgroundColor = ""
+							document.getElementById(id).className = "valid";
+							document.getElementById(id).setAttribute("valid", "true");
 						}
+					}
+					function validateCard(value, id, pattern) {
+						if (!checkLuhm(value)) {
+						document.getElementById(id).className = "invalid"
+						}
+						else {
+							document.getElementById(id).className = "valid";
+						}
+					}
+					function checkLuhm(value) {
+						console.error("hi");
+						let isValid = false;
+						if (!/^\d+$/.test(value) && value.length != 16) {
+							console.error(isValid);
+							return isValid;
+						}
+						let total = 0
+						for (let i = 16, x = 0; i>0; i--){
+							x = Number(value.at(i-1));
+							if ((16-i)%2 == 0) {
+								total += x;
+							}
+							else {
+								total += ((x*2)%10)+((Math.log(x*2) * Math.LOG10E | 0));
+							}
+							console.error("i = " + i);
+							console.error("x = " + x);
+							console.error("total = " + total);
+						}
+						if (total%10 == 0 && total != 0) {
+							isValid = true;
+						}
+						console.error("im doing math :)")
+						console.error(isValid);
+						return isValid;
+					}
+					//document.getElementById("form").addEventListener("submit", validateSubmit("form"));
+					function validateSubmit(id){
+					submit.preventDefault();
+					let formData = new FormData(document.getElementById(id));
+					let formInputs = ""
+						for (var pair of formData.entries()) {
+							if (document.getElementById(pair[0]).getAttribute("valid") == "false"){
+								return false;
+							}
+							formInputs = (formInputs + "%0" + pair[0] + "%3a%20" + pair[1]);
+							console.log("current input is"); 
+							console.log(formInputs);
+						}
+					window.open("mailto:challeng@dn-uk.com?body="+formInputs);
 					}
 				</script>
 		</div>

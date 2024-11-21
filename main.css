@@ -10,14 +10,45 @@ body{
 	font-size:11pt;
 	font-color:var(--cgrey);
 }
-.inputcontainer{
+input{
+	width:75%;
+	border-style:solid;
+	border-width:1px;
+	padding:5px;
+	border-color:var(--cgrey);
+}
+input.inputButton{
+	width:25%;
+	padding:5px 0;
+	margin-top:5px;
+	background-color:var(--cpink);
+	border-radius:5px;
+}
+.textEntry{
+	float:left;
+	width:85%;
+	text-align:right;
+	padding:5px;
+}
+.submit{
+	margin:auto;
+	text-align:center;
+}
+.inputContainer{
 	background-color:var(--cgreen);
 	border-style:solid;
-	border-width:2px;
+	border-width:5px;
 	border-color:var(--cgrey);
+	border-radius:40px;
 	width:50%;
+	max-width:500px;
+	min-width:300px;
 	margin:auto;
+	padding:25px 0px
 }
-.inputfield{
-	
+.valid{
+	background-color:white;
+}
+.invalid{
+	background-color:var(--cpink);
 }
