@@ -5,28 +5,32 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="./main.css" rel="stylesheet" type="text/css" media="all">
 		<title>data input sheet</title>
+		<link rel="icon" href="https://www.dn-uk.com/wp-content/uploads/2020/07/favicon-150x150.png" sizes="32x32">
+		<link rel="icon" href="https://www.dn-uk.com/wp-content/uploads/2020/07/favicon-300x300.png" sizes="192x192">
+		<link rel="apple-touch-icon" href="https://www.dn-uk.com/wp-content/uploads/2020/07/favicon-300x300.png">
 	</head>
 	<body>
 		<div class="inputContainer">
-			<form id="form" onsubmit='validateSubmit("form");return false;' name="form">
+			<form id="form" onsubmit='validateSubmit("form")' name="form">
 				<div class = "textEntry">
 				<label for="name">Name: </label>
-				<input class="valid" type="text" id="name" name="name" valid="false" onfocus='this.className="valid"' onblur='validateText(this.value, this.id, namePattern)'><br>
+				<input class="valid" type="text" id="name" name="name" valid="false" placeholder="Enter Your Name" onfocus='this.className="valid"' onblur='validateText(this.value, this.id, namePattern)'><br>
 				</div>
 				<div class = "textEntry">
 				<label for="email">Email: </label>
-				<input class = "valid" type="text" id="email" name="email" valid="false" onfocus='this.className="valid"' onblur='validateText(this.value, this.id, emailPattern)'><br>
+				<input class = "valid" type="text" id="email" name="email" valid="false" placeholder="Enter Your Email" onfocus='this.className="valid"' onblur='validateText(this.value, this.id, emailPattern)'><br>
 				</div>
 				<div class = "textEntry">
 				<label for="card">Card: </label>
-				<input class="valid" type="text" id="card" name="card" maxlength="16" valid="false" onfocus='this.className="valid"' onblur='validateCard(this.value, this.id, emailPattern)'>
+				<input class="valid" type="text" id="card" name="card" maxlength="16" valid="false" placeholder="Enter a Proxy Credit Card Number" onfocus='this.className="valid"' onblur='validateCard(this.value, this.id, emailPattern)'>
 				</div>
-				<div class="submit" ><input class="inputButton" type="submit"></div>
+				<div class="submit" ><input class="inputButton" type="submit" value="Submit"></div>
 			</form>
 				<script>
-					const namePattern = /^[A-Za-z0-9]+[A-Za-z0-9!#$%&'*+\-\/=?^_`{|}~]+ [A-Za-z-0-9]+[A-Za-z0-9!#$%&'*+\-\/=?^_`{|}~]+$/;
-					const emailPattern = /^[\w-!#$%&'*+\/=?^_`{|}~]+[\w-!#$%&'*+\/=?^_`{|}~\.]*@([\w-]+\.)+[\w-]{2,4}$/;
+					const namePattern = /^[A-Za-z0-9]+[A-Za-z0-9!#$%&'*+\-\/=?^_`{|}~]+ [A-Za-z-0-9]+[A-Za-z0-9!#$%&'*+\-\/=?^_`{|}~]+$/; //regex for checking name field
+					const emailPattern = /^[\w-!#$%&'*+\/=?^_`{|}~]+[\w-!#$%&'*+\/=?^_`{|}~\.]*@([\w-]+\.)+[\w-]{2,4}$/; //regex for checking email field
 					function validateText(value, id, pattern) {
+						//check given value against the given regex command and change the style and custom valid attribute accordingly.
 						if (!pattern.test(value)) {
 							document.getElementById(id).className = "invalid";
 							document.getElementById(id).setAttribute("valid", "false");
@@ -36,54 +40,61 @@
 							document.getElementById(id).setAttribute("valid", "true");
 						}
 					}
-					function validateCard(value, id, pattern) {
+					function validateCard(value, id) {
+						//call checkLuhm function against the given value and update the style and custom valid attribute accordingly.
 						if (!checkLuhm(value)) {
-						document.getElementById(id).className = "invalid"
+							document.getElementById(id).className = "invalid"
+							document.getElementById(id).setAttribute("valid", "false");
 						}
 						else {
 							document.getElementById(id).className = "valid";
+							document.getElementById(id).setAttribute("valid", "true");
 						}
 					}
 					function checkLuhm(value) {
-						console.error("hi");
+						//setting the isValid to false here prevents me having to bother setting it later just check against the true values only.
 						let isValid = false;
-						if (!/^\d+$/.test(value) && value.length != 16) {
-							console.error(isValid);
-							return isValid;
-						}
-						let total = 0
-						for (let i = 16, x = 0; i>0; i--){
-							x = Number(value.at(i-1));
-							if ((16-i)%2 == 0) {
-								total += x;
+						//check is it only digits and is it correct length first
+						if (/^\d{16}$/.test(value)) {
+							//then check the luhm algorithm
+							let total = 0
+							for (let i = 16, x = 0; i>0; i--){
+								x = Number(value.at(i-1)); //i thought about putting the string into a reverse order array of integers but i think this works well enough and doesn't require another for loop
+								//since addition doesn't care about the order we can just check if the digit position is even or odd and do it all in one pass
+								//additionally I want it noted that I came up with this mathematical solution to the problem all by myself, because I'm really proud of how efficient it feels
+								if ((16-i)%2 == 0) {
+									total += x;
+								}
+								else {
+									//x*2%10 allows me to get the digit component of the value and the log10 algorithm grabs the length of the integer -1
+									//since there's no way for a doubled single digit integer to go past 18 i can safely assume that the tens value is the same as the length -1
+									total += ((x*2)%10)+((Math.log(x*2) * Math.LOG10E | 0));
+								}
 							}
-							else {
-								total += ((x*2)%10)+((Math.log(x*2) * Math.LOG10E | 0));
+							//we can check for mod 10 and sum at once here
+							if (total%10 == 0 && total != 0) {
+								isValid = true;
 							}
-							console.error("i = " + i);
-							console.error("x = " + x);
-							console.error("total = " + total);
 						}
-						if (total%10 == 0 && total != 0) {
-							isValid = true;
-						}
-						console.error("im doing math :)")
-						console.error(isValid);
+						//don't need to bother setting the isValid value here because we set it at creation and it'll only change on a valid input
 						return isValid;
 					}
-					//document.getElementById("form").addEventListener("submit", validateSubmit("form"));
 					function validateSubmit(id){
-					submit.preventDefault();
+					
 					let formData = new FormData(document.getElementById(id));
+					//create a string for storing our values in for sticking on the end of the mailto
 					let formInputs = ""
 						for (var pair of formData.entries()) {
+							//for each input we can check if the custom valid attribute is true or not and return false if not, thus preventing the mailto: from loading
 							if (document.getElementById(pair[0]).getAttribute("valid") == "false"){
 								return false;
 							}
-							formInputs = (formInputs + "%0" + pair[0] + "%3a%20" + pair[1]);
-							console.log("current input is"); 
-							console.log(formInputs);
+							//help i don't know how to insert a line break so it formats properly in the url. i tried %0 and \n but nothing...
+							formInputs = (formInputs + "\n | " + pair[0] + ": " + pair[1]);
+							//console.log("current input is " + formInputs); 
 						}
+						//did it this way because i don't really know how html form inputs are handled I had to learn all this in 2 hours at 10pm lol
+						//I know there's probably a better way of doing it reading the actual output from the onsubmit event but i couldn't really figure it out in the time
 					window.open("mailto:challeng@dn-uk.com?body="+formInputs);
 					}
 				</script>
