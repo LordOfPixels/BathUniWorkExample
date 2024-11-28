@@ -1,2 +1,1 @@
-# BathUniWorkExample
- example project for bath uni job
+https://lordofpixels.github.io/BathUniWorkExample/
